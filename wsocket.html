@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WSSOCKET Example</title>  
+    <link rel="stylesheet" href="/lib/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/site.css?v=pAGv4ietcJNk_EwsQZ5BN9-K4MuNYS2a9wl4Jw-q9D0">
+    <link rel="stylesheet" href="/Websocket.styles.css?v=PkIaTvThJhHat_TC0brKmCGpWJQM_i48rNJmcT7Qvx4">
+</head>
+<body> 
+ 
+  <input type="text" id="messageInput" placeholder="Enter message...">
+  <button onclick="sendMessage()">Send</button>
+  <div id="output"></div>
+
+  <script>
+      const socket = new WebSocket("ws://BV004:5124/wsocket/");
+	   const messages = [];
+
+      socket.onopen = function (event) {
+          console.log("WebSocket connection established.");
+      };
+
+      socket.onmessage = function (event) {
+          console.log("Message received: " + event.data);
+          document.getElementById("output").innerText += event.data + "\n";
+		  messages.push(event.data); // Store the received message in the array
+    
+      };
+
+      socket.onclose = function (event) {
+          console.log("WebSocket connection closed.");
+      };
+
+      function sendMessage() {
+          const messageInput = document.getElementById("messageInput");
+          const message = messageInput.value;
+          socket.send(message);
+          messageInput.value = "";
+		   const output = document.getElementById("output");
+            output.innerText = messages.join("\n");
+      }
+  </script>
+</body>
+</html>
